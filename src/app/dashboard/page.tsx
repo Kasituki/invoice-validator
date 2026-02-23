@@ -1,8 +1,12 @@
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import CsvDownloadButton from "@/components/CsvDownloadButton";
+import DashboardTable from "@/components/DashboardTable";
+import { DbInvoice } from "@/types/invoice";
 
 // キャッシュを無効化し、常に最新のDBデータを取得する設定
 export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 export default async function Dashboard() {
   // Supabaseから請求書データを取得（作成日時の降順）
@@ -22,9 +26,12 @@ export default async function Dashboard() {
     <main className="p-8 max-w-5xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">請求書ダッシュボード</h1>
-        <Link href="/" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-          ＋ 新規アップロード
-        </Link>
+        <div className="flex gap-4"> {/* コンテナを追加 */}
+          <CsvDownloadButton data={invoices as unknown as DbInvoice[] || []} /> {/* CSVボタンを追加 */}
+          <Link href="/" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            ＋ 新規アップロード
+          </Link>
+        </div>
       </div>
 
       {/* 簡易分析パネル */}
@@ -36,31 +43,7 @@ export default async function Dashboard() {
       {/* 一覧テーブル */}
       <div className="bg-white rounded-lg shadow overflow-hidden border">
         <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-gray-100 border-b">
-              <th className="p-4">登録番号</th>
-              <th className="p-4">請求日</th>
-              <th className="p-4 text-right">合計金額</th>
-              <th className="p-4">登録日時</th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoices?.map((inv) => (
-              <tr key={inv.id} className="border-b hover:bg-gray-50">
-                <td className="p-4 font-mono text-sm">{inv.registration_number}</td>
-                <td className="p-4">{inv.invoice_date}</td>
-                <td className="p-4 text-right font-bold">¥{inv.total_amount.toLocaleString()}</td>
-                <td className="p-4 text-sm text-gray-500">
-                  {new Date(inv.created_at).toLocaleString('ja-JP')}
-                </td>
-              </tr>
-            ))}
-            {invoices?.length === 0 && (
-              <tr>
-                <td colSpan={4} className="p-8 text-center text-gray-500">データがありません</td>
-              </tr>
-            )}
-          </tbody>
+            <DashboardTable invoices={(invoices as unknown as DbInvoice[]) || []} />
         </table>
       </div>
     </main>

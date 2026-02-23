@@ -17,3 +17,15 @@ export interface InvoiceItem {
     };
     total_amount: number;
   }
+
+  export interface DbInvoice {
+    id: string;
+    registration_number: string;
+    invoice_date: string; // DBではこの名前
+    subtotal_10: number;
+    tax_10: number;
+    subtotal_8: number;
+    tax_8: number;
+    total_amount: number;
+    created_at: string;
+  }
