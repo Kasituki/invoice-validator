@@ -33,10 +33,10 @@
 npm install
 
 ## 環境変数の設定 (.env.local)
-NEXT_PUBLIC_GEMINI_API_KEY=your_key
-NEXT_PUBLIC_SUPABASE_URL=your_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
-BASIC_AUTH_USER=admin
-BASIC_AUTH_PASSWORD=password
+* NEXT_PUBLIC_GEMINI_API_KEY=your_key
+* NEXT_PUBLIC_SUPABASE_URL=your_url
+* NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+* BASIC_AUTH_USER=admin
+* BASIC_AUTH_PASSWORD=password
 
 #イメージ
