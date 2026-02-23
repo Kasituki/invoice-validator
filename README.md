@@ -39,4 +39,50 @@ npm install
 * BASIC_AUTH_USER=admin
 * BASIC_AUTH_PASSWORD=password
 
-#イメージ
+## データベース・セットアップ (Supabase)
+SQL Editor で以下のクエリを実行し、テーブルを作成してください。
+
+\`\`\`sql
+create table inv_invoices (
+  id uuid default gen_random_uuid() primary key,
+  registration_number text,         -- インボイス登録番号
+  invoice_date date,                -- 請求日
+  subtotal_10 numeric,              -- 10%対象額
+  tax_10 numeric,                   -- 10%消費税
+  subtotal_8 numeric,               -- 8%対象額
+  tax_8 numeric,                    -- 8%消費税
+  total_amount numeric,             -- 合計金額
+  created_at timestamp with time zone default now()
+);
+\`\`\`
+
+## プロジェクト構造
+\`\`\`text
+src/
+├── app/
+│   ├── api/analyze/    # AI解析API (Gemini API)
+│   ├── dashboard/      # 一覧・分析画面
+│   ├── layout.tsx
+│   └── page.tsx        # メイン解析画面
+├── components/         # 共通コンポーネント (DashboardTable, CsvDownloadButton)
+├── lib/                # 外部サービス連携 (Supabaseクライアント)
+├── types/              # 型定義 (InvoiceData, DbInvoice)
+└── middleware.ts       # Basic認証の定義
+\`\`\`
+
+## ライセンス
+MIT License
+
+## イメージ
+* 初期画面
+<img width="1429" height="949" alt="image" src="https://github.com/user-attachments/assets/b2a479ca-b3a5-4ea7-861f-3c57eb3be76d" />
+
+* アップロード後画面
+<img width="1156" height="1285" alt="image" src="https://github.com/user-attachments/assets/34bb8634-8e3f-4562-a4dd-78e02714c4be" />
+
+* 一覧画面
+<img width="1050" height="478" alt="image" src="https://github.com/user-attachments/assets/3ca9ff58-c854-469c-a5c6-abf594b5fb70" />
+
+* 一覧画面(アコーディオン展開)
+<img width="1051" height="614" alt="image" src="https://github.com/user-attachments/assets/96b86fba-6766-4543-a35d-b21ef6e0f4a1" />
+
