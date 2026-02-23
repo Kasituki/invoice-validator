@@ -215,9 +215,9 @@ export default function InvoiceApp() {
           <div className="bg-white border p-4 rounded shadow">
             <h2 className="font-bold mb-4">論理バリデーション</h2>
             <ul className="space-y-2">
-              <StatusItem label="10%消費税計算" status={result.validation.tax10} />
-              <StatusItem label="8%消費税計算" status={result.validation.tax8} />
-              <StatusItem label="合計金額整合性" status={result.validation.total} />
+              <StatusItem label="10%消費税計算" status={result && result.validation.tax10} />
+              <StatusItem label="8%消費税計算" status={result && result.validation.tax8} />
+              <StatusItem label="合計金額整合性" status={result && result.validation.total} />
             </ul>
           </div>
 
