@@ -62,7 +62,7 @@ export default function InvoiceApp() {
     if (!file) return;
 
     setLoading(true);
-    const fileToSend = isDemoMode ? file : await compressImage(file);
+    const fileToSend = await compressImage(file);
     const formData = new FormData();
     formData.append("file", fileToSend);
 
