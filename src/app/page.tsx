@@ -5,6 +5,52 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 
 const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+const MAX_BYTES = 1024 * 1024; // 1MB
+
+function compressImage(file: File): Promise<File> {
+  return new Promise((resolve) => {
+    if (!file.type.startsWith("image/") || file.size <= MAX_BYTES) {
+      resolve(file);
+      return;
+    }
+
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+
+      const MAX_DIM = 2048;
+      let { width, height } = img;
+      if (width > MAX_DIM || height > MAX_DIM) {
+        const ratio = Math.min(MAX_DIM / width, MAX_DIM / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+
+      const tryCompress = (quality: number) => {
+        canvas.toBlob((blob) => {
+          if (!blob) { resolve(file); return; }
+          if (blob.size <= MAX_BYTES || quality <= 0.3) {
+            resolve(new File([blob], file.name, { type: "image/jpeg" }));
+          } else {
+            tryCompress(quality - 0.15);
+          }
+        }, "image/jpeg", quality);
+      };
+
+      tryCompress(0.85);
+    };
+
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
 
 export default function InvoiceApp() {
   const [result, setResult] = useState<any>(null);
@@ -16,8 +62,9 @@ export default function InvoiceApp() {
     if (!file) return;
 
     setLoading(true);
+    const fileToSend = isDemoMode ? file : await compressImage(file);
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", fileToSend);
 
     const res = await fetch("/api/analyze", { method: "POST", body: formData });
     const json = await res.json();
