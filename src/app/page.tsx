@@ -89,9 +89,13 @@ export default function InvoiceApp() {
     setEditableData(newData);
   };
 
-  // Supabaseへの保存処理（後で実装）
   const handleSave = async () => {
     if (!editableData) return;
+
+    if (isDemoMode) {
+      alert("デモモードのため保存はスキップされます。");
+      return;
+    }
 
     try {
       setLoading(true);
