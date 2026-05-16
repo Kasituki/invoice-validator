@@ -4,6 +4,8 @@ import { InvoiceData } from "@/types/invoice";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 
+const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+
 export default function InvoiceApp() {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -92,6 +94,11 @@ export default function InvoiceApp() {
 
   return (
     <main className="p-8 max-w-4xl mx-auto">
+      {isDemoMode && (
+        <div className="mb-6 bg-yellow-50 border border-yellow-300 text-yellow-800 px-4 py-3 rounded-lg text-sm font-medium">
+          デモモード動作中 — Gemini API は呼ばれません。固定のサンプル請求書データが返されます。
+        </div>
+      )}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">AI Invoice Validator</h1>
         <Link href="/dashboard" className="text-blue-600 hover:underline font-bold">

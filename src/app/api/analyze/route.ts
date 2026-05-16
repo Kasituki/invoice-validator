@@ -1,9 +1,14 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
+import { DEMO_INVOICE, DEMO_VALIDATION } from "@/lib/demoData";
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
 
 export async function POST(req: Request) {
+  if (process.env.NEXT_PUBLIC_DEMO_MODE === "true") {
+    return NextResponse.json({ data: DEMO_INVOICE, validation: DEMO_VALIDATION });
+  }
+
   const formData = await req.formData();
   const file = formData.get("file") as File;
 
