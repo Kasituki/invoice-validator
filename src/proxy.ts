@@ -6,6 +6,10 @@ export const config = {
 };
 
 export function proxy(req: NextRequest) {
+  if (process.env.NEXT_PUBLIC_DEMO_MODE === "true") {
+    return NextResponse.next();
+  }
+
   const basicAuth = req.headers.get('authorization');
   const url = req.nextUrl;
 
